@@ -1,0 +1,25 @@
+name: McSiege
+version: '${project.version}'
+main: me.timecutstr.mcsiege.McSiege
+api-version: 1.19
+authors: [ TimeCutStr ]
+description: un plugin de mini jeux où les joueurs se font attaquer par des hordes de monstres
+website: https://linktr.ee/timecut
+commands:
+  spawn:
+    description: fait spawn un zombie
+    usage: /<command>
+
+  spawnTarget:
+    description: fait spawn le villageois victime
+    usage: /<command>
+
+  setTarget:
+    description: set la location du joueur comme position de la victime
+    usage: /<command>
+
+  SetFood:
+    description: kjdbfkjs
+
+  printMessageFromConfig:
+    description:  kdfshdslkf
