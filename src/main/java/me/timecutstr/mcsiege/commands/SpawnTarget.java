@@ -1,7 +1,7 @@
 package me.timecutstr.mcsiege.commands;
 
 import me.timecutstr.mcsiege.McSiege;
-import me.timecutstr.mcsiege.manger.GameManager;
+import me.timecutstr.mcsiege.manager.GameManager;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -12,8 +12,6 @@ import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
-
-import java.lang.module.Configuration;
 
 public class SpawnTarget implements CommandExecutor {
 

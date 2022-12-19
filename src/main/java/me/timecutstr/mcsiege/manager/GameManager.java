@@ -1,4 +1,4 @@
-package me.timecutstr.mcsiege.manger;
+package me.timecutstr.mcsiege.manager;
 
 import org.bukkit.entity.Entity;
 

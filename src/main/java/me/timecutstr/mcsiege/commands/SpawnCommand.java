@@ -1,16 +1,12 @@
 package me.timecutstr.mcsiege.commands;
 
-import com.destroystokyo.paper.entity.Pathfinder;
-import me.timecutstr.mcsiege.McSiege;
-import me.timecutstr.mcsiege.manger.GameManager;
+import me.timecutstr.mcsiege.manager.GameManager;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.*;
 import org.jetbrains.annotations.NotNull;
-
-import java.sql.SQLOutput;
 
 public class SpawnCommand implements CommandExecutor {
 

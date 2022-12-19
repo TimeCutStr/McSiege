@@ -2,10 +2,9 @@ package me.timecutstr.mcsiege;
 
 import me.timecutstr.mcsiege.commands.SpawnCommand;
 import me.timecutstr.mcsiege.commands.SpawnTarget;
-import me.timecutstr.mcsiege.manger.GameManager;
+import me.timecutstr.mcsiege.manager.GameManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
