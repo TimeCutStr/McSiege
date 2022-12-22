@@ -35,6 +35,7 @@ public class SpawnCommand implements CommandExecutor {
                 if(monstre instanceof Mob mob && gameManager.getTarget() instanceof LivingEntity target){
                     mob.setTarget(target);
                     p.sendMessage("La cible est " + gameManager.getTarget().name());
+                    gameManager.addMonstre(mob);
 
 
                 /* Pathfinder path = mob.getPathfinder();
@@ -64,3 +65,5 @@ public class SpawnCommand implements CommandExecutor {
 
 
 }
+
+
