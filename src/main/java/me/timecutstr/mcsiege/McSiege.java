@@ -1,26 +1,35 @@
 package me.timecutstr.mcsiege;
 
+import me.timecutstr.mcsiege.Listeners.MonsterDeathListener;
 import me.timecutstr.mcsiege.commands.*;
 import me.timecutstr.mcsiege.manager.GameManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.messaging.PluginMessageRecipient;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Set;
 
 public final class McSiege extends JavaPlugin {
 
     private GameManager gameManager;
+    private static McSiege plugin;
 
 
     @Override
     public void onEnable() {
+        plugin = this;
+
         // config file
         getConfig().options().copyDefaults();
         saveDefaultConfig();
 
         //singleton du gamemanager
-        this.gameManager = GameManager.getGameManager();
+        this.gameManager = new GameManager(this);
 
         //gestion des commandes
         getCommand("spawn").setExecutor(new SpawnCommand());
@@ -28,38 +37,37 @@ public final class McSiege extends JavaPlugin {
         getCommand("setTarget").setExecutor(new SpawnTarget());
         getCommand("resetTarget").setExecutor(new ResetTargetCommand());
         getCommand("clear").setExecutor(new LevelClearCommand());
-        getCommand("setL1").setExecutor(new SetLocationCommand());
-        getCommand("setL2").setExecutor(new SetLocationCommand());
 
+
+        //gestion listener
+        getServer().getPluginManager().registerEvents(new MonsterDeathListener(), this);
+
+
+        //lancement de la boucle toutes les secondes
         resetAllTarget();
     }
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-
-        if(command.getName().equals("printMessageFromConfig")){
-            Player player = (Player) sender;
-            player.sendMessage(getConfig().getString("food"));
-        } else if (command.getName().equals("SetFood")) {
-            Player player = (Player) sender;
-            player.sendMessage("la commande marche");
-            getConfig().set("food", "citrouille");
-
-
-        }
-
-        return false;
+    public static McSiege getPlugin()
+    {
+        return plugin;
     }
+
 
     public void resetAllTarget() {
         new BukkitRunnable() {
             @Override
             public void run() {
                 gameManager.resetMonstreTarget();
+                gameManager.perteDePoints();
+
             }
         }.runTaskTimer(this, 0, 20); // exécute la tâche toutes les secondes (20 ticks)
 
     }
+
+    public GameManager getGameManager() {
+        return gameManager;
+    }
+
+
 }
-//todo definir une zone de 5 par 5 autour du target. Si les monstres entrent dedans ils disparaissent et décrémente le nombre de vie
-//todo /clear pour effacer le villageoois et les monstres

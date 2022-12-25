@@ -18,20 +18,9 @@ commands:
     description: set la location du joueur comme position de la victime
     usage: /<command>
 
-  SetFood:
-    description: kjdbfkjs
-
-  printMessageFromConfig:
-    description:  kdfshdslkf
-
   resetTarget:
     description: reset la cible des zombies
 
   clear:
     description: Tue tous les monstres du niveau ainsi que la target
 
-  setL1:
-    description: defini le debut de la zone à defendre
-
-  setL2:
-    description: definit la fin de la zone à defendre

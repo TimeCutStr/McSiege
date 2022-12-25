@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class SpawnTarget implements CommandExecutor {
 
-    GameManager gameManager = GameManager.getGameManager(); //Singleton du game manager
+    GameManager gameManager = McSiege.getPlugin().getGameManager();
 
     Plugin plugin = McSiege.getPlugin(McSiege.class);
 
