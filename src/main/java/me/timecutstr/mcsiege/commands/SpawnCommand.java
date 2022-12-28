@@ -2,6 +2,8 @@ package me.timecutstr.mcsiege.commands;
 
 import me.timecutstr.mcsiege.McSiege;
 import me.timecutstr.mcsiege.manager.GameManager;
+import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -11,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class SpawnCommand implements CommandExecutor {
 
-    GameManager gameManager = McSiege.getPlugin().getGameManager();
+    McSiege plugin = McSiege.getPlugin();
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -23,24 +25,28 @@ public class SpawnCommand implements CommandExecutor {
 
             if(args.length == 0) {
                 nombreASpawn = 1;
+            } else {
+
+
+                try {
+                    nombreASpawn = Integer.parseInt(args[0]);
+                } catch (NumberFormatException e) {
+                    p.sendMessage("tu n'as pas rentré un nombre");
+                    p.sendMessage("Exemple : '/spawn' pour faire spawn un monstre et '/spawn 20' pour en faire spawn 20");
+
+                }
+
+                if (args.length > 1) {
+                    p.sendMessage("Tu as essayé de mettre trop d'arguments dans ta commande");
+                    return false;
+                }
             }
 
 
-            try {
-                nombreASpawn = Integer.parseInt(args[0]);
-            } catch (NumberFormatException e) {
-                p.sendMessage("tu n'as pas rentré un nombre");
-                p.sendMessage("Exemple : '/spawn' pour faire spawn un monstre et '/spawn 20' pour en faire spawn 20");
-
+            for (int i = 1; i < 5; i++) {
+                plugin.getGameManager().spawn(nombreASpawn, plugin.getConfig().getLocation("spawnLocation"+i));
             }
 
-            if(args.length > 1) {
-                p.sendMessage("Tu as essayé de mettre trop d'arguments dans ta commande");
-                return false;
-            }
-            //On set la location TODO : Faire un set locations sur un endroit avec un outil par exemple
-
-            gameManager.spawn(nombreASpawn);
 
         }
 

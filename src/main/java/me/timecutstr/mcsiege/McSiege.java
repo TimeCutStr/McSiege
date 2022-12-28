@@ -1,18 +1,13 @@
 package me.timecutstr.mcsiege;
 
-import me.timecutstr.mcsiege.Listeners.MonsterDeathListener;
+import me.timecutstr.mcsiege.listeners.EntityInteractEventListener;
+import me.timecutstr.mcsiege.listeners.MonsterDeathListener;
 import me.timecutstr.mcsiege.commands.*;
+import me.timecutstr.mcsiege.listeners.PlayerClickOnMenu;
 import me.timecutstr.mcsiege.manager.GameManager;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
+import me.timecutstr.mcsiege.manager.GameState;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.messaging.PluginMessageRecipient;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Set;
 
 public final class McSiege extends JavaPlugin {
 
@@ -34,17 +29,33 @@ public final class McSiege extends JavaPlugin {
         //gestion des commandes
         getCommand("spawn").setExecutor(new SpawnCommand());
         getCommand("spawnTarget").setExecutor(new SpawnTarget());
-        getCommand("setTarget").setExecutor(new SpawnTarget());
+        getCommand("setTarget").setExecutor(new SetUpCommand());
+        getCommand("setSpawn").setExecutor(new SetUpCommand());
+        getCommand("setWeaponShop").setExecutor(new SetUpCommand());
+        getCommand("setArmorShop").setExecutor(new SetUpCommand());
         getCommand("resetTarget").setExecutor(new ResetTargetCommand());
         getCommand("clear").setExecutor(new LevelClearCommand());
+        getCommand("setup").setExecutor(new SetUpCommand());
+        getCommand("start").setExecutor(new StartCommand());
+        getCommand("menu").setExecutor(new MenuCommand());
 
 
         //gestion listener
         getServer().getPluginManager().registerEvents(new MonsterDeathListener(), this);
+        getServer().getPluginManager().registerEvents(new EntityInteractEventListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerClickOnMenu(), this);
 
 
         //lancement de la boucle toutes les secondes
         resetAllTarget();
+
+        //setup du gamestate
+        gameManager.setGameState(GameState.LOBBY);
+    }
+
+    @Override
+    public void onDisable() {
+        gameManager.Clear();
     }
 
     public static McSiege getPlugin()

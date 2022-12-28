@@ -24,3 +24,20 @@ commands:
   clear:
     description: Tue tous les monstres du niveau ainsi que la target
 
+  setup:
+    description: Passe en setup pour mettre en place les spawns des monstres et le centre de la map
+
+  setSpawn:
+    description: Permet de définir le point de spawn des monstres mais uniquement en phase de SetUp.
+
+  start:
+    description: Lance la partie si on se trouve dans le lobby
+
+  menu:
+    description: Ouvre un menu
+
+  setWeaponShop:
+    description: Inscrit la position du weapon Shop dans le Config.yml
+
+  setArmorShop:
+    description: Inscrit la position de l'armor Shop dans le Config.yml

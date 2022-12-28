@@ -11,7 +11,7 @@ public class LevelClearCommand implements CommandExecutor {
     GameManager gameManager = McSiege.getPlugin().getGameManager();
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        gameManager.clear();
+        gameManager.Clear();
         return false;
     }
 }
