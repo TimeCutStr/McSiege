@@ -4,6 +4,7 @@ import me.timecutstr.mcsiege.McSiege;
 import me.timecutstr.mcsiege.manager.GameManager;
 import me.timecutstr.mcsiege.manager.menu.ArmorMenuManager;
 import me.timecutstr.mcsiege.manager.menu.WeaponMenuManager;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
@@ -16,10 +17,10 @@ public class EntityInteractEventListener implements Listener {
 
 
     @EventHandler
-    public void test(PlayerInteractAtEntityEvent event)
+    public void OuverturMenuEquipement(PlayerInteractAtEntityEvent event)
     {
         Player p = event.getPlayer();
-
+        // if(event.getRightClicked() instanceof Block  TODO Regarder comment gérer les interactions avec les panneaux
 
         if(event.getRightClicked() instanceof Villager villager) {
             if (villager.getName().equals("WeaponShop")) {

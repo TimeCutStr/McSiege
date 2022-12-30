@@ -34,6 +34,7 @@ public class WeaponMenuManager {
         weaponmenu.addItem(AddEquipment(Material.NETHERITE_SWORD));
         weaponmenu.addItem(AddEquipment(Material.BOW));
         weaponmenu.addItem(AddEquipment(Material.ARROW, 64));
+        weaponmenu.addItem(AddEquipment(Material.SHIELD));
 
 
 

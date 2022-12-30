@@ -1,10 +1,9 @@
 package me.timecutstr.mcsiege.manager;
 
 import me.timecutstr.mcsiege.McSiege;
-import me.timecutstr.mcsiege.shop.ArmorShop;
-import me.timecutstr.mcsiege.shop.WeaponShop;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -23,16 +22,18 @@ public class GameManager {
     private int vies =100;
     private HealthManager healthManager;
     private GameState gameState = GameState.LOBBY;
+    private List<GameState> level;
     private ListMonstreManager listMonstreManager;
     private TargetManager targetManager;
-    public WeaponShop weaponShop;
+
+    private SpawnManager spawnManager;
+
 
     public List<LivingEntity> getVillagerShops() {
         return villagerShops;
     }
 
     private List<LivingEntity> villagerShops;
-    public ArmorShop armorShop;
 
     private List<Player> players;
 
@@ -43,10 +44,24 @@ public class GameManager {
         this.listMonstreManager = new ListMonstreManager(plugin);
         targetManager = new TargetManager();
         healthManager = new HealthManager(100);
+        spawnManager = new SpawnManager(this);
         villagerShops = new ArrayList<>();
-
-
-
+        level= new ArrayList<>();
+        level.add(GameState.STARTING);
+        level.add(GameState.WAVE1);
+        level.add(GameState.SHOP);
+        level.add(GameState.WAVE2);
+        level.add(GameState.WAVE3);
+        level.add(GameState.SHOP);
+        level.add(GameState.WAVESPECIAL1);
+        level.add(GameState.WAVE4);
+        level.add(GameState.WAVE5);
+        level.add(GameState.SHOP);
+        level.add(GameState.WAVE6);
+        level.add(GameState.WAVESPECIAL2);
+        level.add(GameState.WAVE7);
+        level.add(GameState.SHOP);
+        level.add(GameState.BOSS);
 
     }
 
@@ -178,10 +193,10 @@ public class GameManager {
                 Bukkit.broadcast(Component.text("les joueurs qui veulent être specateur doivent faire /spectate"));
                 Bukkit.broadcast(Component.text("Quand 5 joueurs seront prèts la partie se lancera"));
 
-                if(weaponShop == null)
+                if(villagerShops.isEmpty())
                 {
-                    spawnShop("WeaponShop");
-                    spawnShop("ArmorShop");
+                    spawnManager.spawnShop("WeaponShop",villagerShops);
+                    spawnManager.spawnShop("ArmorShop", villagerShops);
                 }
 
                 //todo gestion des joueurs prets avec une liste de joueurs
@@ -190,117 +205,39 @@ public class GameManager {
 
             break;
 
-            case WAVE1:
-                Bukkit.broadcast(Component.text("C'est parti pour la vague 1 !"));
-                spawnVictime();
+            case STARTING:
+                Bukkit.broadcast(Component.text("La partie va commencer !").color(NamedTextColor.BLUE));
+                Bukkit.broadcast(Component.text("Vous avez une minute pour faire vos achats !").color(NamedTextColor.BLUE));
 
-                for (int i = 1; i < 5; i++) {
-                    Location location = plugin.getConfig().getLocation("spawnLocation"+i);
-                    spawn(5,EntityType.ZOMBIE ,location);
-                    spawn(2,EntityType.SKELETON,location);
-                    spawn(1,EntityType.SPIDER,location);
-                }
-
-                players = new ArrayList<>(Bukkit.getOnlinePlayers());
-
-                for (Player p : players
-                     ) {
+            case SHOP:
+                //TODO FAIRE UN GESTIONNAIR DES JOUEURS POUR GARDER QUE 5 JOUEUR ET DES SPECTATEURS
+                for (Player p : players //clear d'inventaires
+                ) {
                     p.getInventory().clear();
                     p.getInventory().addItem(new ItemStack(Material.GOLD_NUGGET, 20));
                 }
 
+                Bukkit.broadcast(Component.text("Bravo vous avez survecu jusque là !").color(NamedTextColor.BLUE));
+                Bukkit.broadcast(Component.text("Vous avez une minute pour faire vos achats !").color(NamedTextColor.BLUE));
             break;
 
-            case WAVE2:
-                System.out.println("CHOP");
+            case WAVE1:
+                Bukkit.broadcast(Component.text("C'est parti pour la vague 1 !"));
+                spawnManager.spawnVictime();
+
+                for (int i = 1; i < 5; i++) {
+                    Location location = plugin.getConfig().getLocation("spawnLocation"+i);
+                    spawnManager.spawn(5,EntityType.ZOMBIE ,location,targetManager,listMonstreManager);
+                    spawnManager.spawn(2,EntityType.SKELETON,location,targetManager,listMonstreManager);
+                    spawnManager.spawn(1,EntityType.SPIDER,location,targetManager,listMonstreManager);
+                }
+
+                players = new ArrayList<>(Bukkit.getOnlinePlayers());
+
+
             break;
+
+
         }
-    }
-
-
-    // SPAWN
-    public void spawn (int nombreASpawn, Location location)
-    {
-
-        while (nombreASpawn > 0 ) {
-
-
-            Entity monstre = location.getWorld().spawnEntity(location, EntityType.ZOMBIE);
-
-
-
-            if (targetManager.getTarget() == null) {
-                System.out.println("pas de target");
-            } else {
-                if (monstre instanceof Mob mob && targetManager.getTarget() instanceof LivingEntity target) {
-                    mob.setTarget(target);
-                    listMonstreManager.addMonstre(mob);
-
-                }
-            }
-            nombreASpawn --;
-        }
-
-    }
-
-    public void spawn (int nombreASpawn, EntityType type, Location location)
-    {
-
-        while (nombreASpawn > 0 ) {
-
-
-            Entity monstre = location.getWorld().spawnEntity(location, type);
-
-            if (targetManager.getTarget() == null) {
-                System.out.println("pas de target");
-            } else {
-                if (monstre instanceof Mob mob && targetManager.getTarget() instanceof LivingEntity target) {
-                    mob.setTarget(target);
-                    mob.setCustomName("MONSTRE !!!");
-                    mob.setCustomNameVisible(true);
-                    listMonstreManager.addMonstre(mob);
-
-                }
-            }
-            nombreASpawn --;
-        }
-
-    }
-
-    public void spawnVictime ()
-    {
-        //On récupère la position enregistrée dans le fichier de config
-        Location spawnLocation = plugin.getConfig().getLocation("targetLocation");
-
-        //On fait spawn un Villageois à l'endroit défini avec un nom et on désactive le Aware
-        Entity target = spawnLocation.getWorld().spawnEntity(spawnLocation, EntityType.VILLAGER);
-
-        target.setCustomName("Victime");
-        target.setCustomNameVisible(true);
-
-        if (target instanceof Mob mob) {
-            mob.setAware(false);
-        }
-
-        //On enregistre la target dans le gameManager
-        setTarget(target);
-    }
-
-    public void spawnShop (String nom)
-    {
-        Location shopLocation = plugin.getConfig().getLocation(nom+"Location");
-        LivingEntity villager = (LivingEntity) shopLocation.getWorld().spawnEntity(shopLocation, EntityType.VILLAGER);
-        villager.setCustomName(nom);
-        villager.setCustomNameVisible(true);
-        villager.setInvulnerable(true);
-
-        villagerShops.add(villager);
-    }
-
-    public void spawnArmorShop ()
-    {
-        Location armorShopLocation = plugin.getConfig().getLocation("ArmorShopLocation");
-        armorShop = new ArmorShop(armorShopLocation);
-
     }
 }

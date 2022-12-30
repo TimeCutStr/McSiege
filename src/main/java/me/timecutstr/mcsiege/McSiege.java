@@ -27,7 +27,6 @@ public final class McSiege extends JavaPlugin {
         this.gameManager = new GameManager(this);
 
         //gestion des commandes
-        getCommand("spawn").setExecutor(new SpawnCommand());
         getCommand("spawnTarget").setExecutor(new SpawnTarget());
         getCommand("setTarget").setExecutor(new SetUpCommand());
         getCommand("setSpawn").setExecutor(new SetUpCommand());
