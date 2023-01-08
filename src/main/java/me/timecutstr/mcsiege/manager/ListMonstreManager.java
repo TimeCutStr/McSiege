@@ -1,10 +1,9 @@
 package me.timecutstr.mcsiege.manager;
 
 import me.timecutstr.mcsiege.McSiege;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Mob;
-import org.bukkit.entity.Player;
+import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.*;
 import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
@@ -13,9 +12,9 @@ import java.util.List;
 public class ListMonstreManager {
 
     private final McSiege plugin;
-    private List<Mob> monstres = new ArrayList<>();
+    private ArrayList<Mob> monstres = new ArrayList<>();
 
-    public List<Mob> getMonstres ()
+    public ArrayList<Mob> getMonstres ()
     {
         return monstres;
     }
@@ -33,6 +32,13 @@ public class ListMonstreManager {
         //tue tous les monstres ainsi que la target
         if(plugin.getGameManager().getTarget() != null) {
             Mob m = (Mob) plugin.getGameManager().getTarget();
+            for (Entity entity : m.getWorld().getEntities()) //on profite d'avoir un mob qu'on est sur d'être là pour clear les objets au sol
+            {
+                if(entity instanceof Item)
+                {
+                    entity.remove();
+                }
+            }
             m.setHealth(0);
         }
 
@@ -43,22 +49,28 @@ public class ListMonstreManager {
         }
         plugin.getGameManager().getVillagerShops().clear();
 
-        for (Mob monstre: monstres
+        ArrayList<Mob> monstreATuer = new ArrayList<>() ;
+        for (Mob monstre: monstres) {
+            monstreATuer.add(monstre);
+        }
+        for (Mob monstre: monstreATuer
         ) {
             monstre.setHealth(0);
         }
-        monstres.clear();
+
+
     }
 
-    public void RetireDeLaListe (Mob monstre) {
-        if(monstres.contains(monstre))
+    public void RetireDeLaListe (Mob monstreMort) {
+        if(monstres.contains(monstreMort))
         {
-            monstres.remove(monstre);
+            monstres.remove(monstreMort); //On enlève le monstre de la liste
+            CheckListVide(); //On vérifie si la liste est vide pour passer à la prochaine wave
         }
     }
 
 
-    public boolean MonstreIsDansListe(Mob m)
+    public boolean MonstreIsDansListe(Mob m) // Verifie que le monstre est bien dans la list
     {
         for (Mob monstre: monstres
         ) {
@@ -79,6 +91,19 @@ public class ListMonstreManager {
                     }
                 }
             }
+        }
+
+    }
+
+    public void CheckListVide ()
+    {
+
+        // si la liste des monstres est vide, on passe au gamestate suivant
+        if(monstres.isEmpty() && plugin.getGameManager().isGameStarted() && plugin.getGameManager().getWave() == 5)
+        {
+            Bukkit.broadcast(Component.text("Vous avez tué tous les monstres !"));
+            McSiege.getPlugin().getGameManager().NextGameState();
+            McSiege.getPlugin().getGameManager().RecompenseFinWave();
         }
 
     }

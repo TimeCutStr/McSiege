@@ -15,7 +15,7 @@ public class StartCommand implements CommandExecutor {
 
         if(plugin.getGameManager().getGameState() == GameState.LOBBY)
         {
-            plugin.getGameManager().setGameState(GameState.WAVE1);
+            plugin.getGameManager().setGameState(GameState.STARTING);
         } else {
             if(sender instanceof Player p) {
                 p.sendMessage("Il faut être dans le lobby pour commencer le jeu");

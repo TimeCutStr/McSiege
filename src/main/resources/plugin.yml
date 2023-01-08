@@ -41,3 +41,14 @@ commands:
 
   setArmorShop:
     description: Inscrit la position de l'armor Shop dans le Config.yml
+
+  lobby:
+    description: Retourn au lobby et clear le niveau
+
+  rdy:
+    description: Inscrit le joueur dans le jeu
+    aliases: ready
+
+  reloadConfig:
+    description: Prend en compte les modifications faites au config.yml
+

@@ -14,29 +14,46 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HealthManager {
+    private int viesMax;
     private int vies;
+
+    public void setGameOn(boolean gameOn) {
+        this.gameOn = gameOn;
+    }
+
+    private boolean gameOn;
 
     public HealthManager (int vies)
     {
-        this.vies = vies;
+        this.viesMax = vies;
+        this.vies = this.viesMax;
+        gameOn = false;
+    }
+
+    public void resetHealthManager ()
+    {
+        vies = viesMax;
     }
 
 
 
     public void perteDePoints (McSiege plugin, ListMonstreManager listMonstreManager, Entity target)
     {
-        List<Mob> monstres = listMonstreManager.getMonstres();
-        List<Mob> monstresMorts = new ArrayList<>();
+        if(!gameOn)
+        {
+            return;
+        }
+        ArrayList<Mob> monstres = listMonstreManager.getMonstres();
+        ArrayList<Mob> monstresMort = new ArrayList<>();
+
         if(!monstres.isEmpty()) { //si il y a des monstres dans la liste
-            Bukkit.broadcast(Component.text(monstres.toString()));
             for (Mob monstre : monstres) { //pour chaque monstre dans la liste des monstres
                 Location mL = monstre.getLocation();
                 Location tL = target.getLocation();
                 Double distX;
                 Double distZ;
                 Double distance;
-
-
+                // CALCULE DE LA DISTANCE ENTRE LE MONSTRE ET LA TARGET
                 if (mL.getX() > tL.getX()) {
                     distX = mL.getX() - tL.getX();
                 } else {
@@ -52,10 +69,8 @@ public class HealthManager {
 
                 distance = Math.sqrt(distX * distX + distZ * distZ);
 
-
-                if (distance < 5) {
-                    monstre.setHealth(0);
-                    monstresMorts.add(monstre);
+                if (distance < 5) { //SI LA DISTANCE EST INFERIEUR A 5 BLICK ON TUE LE MONSTRE ET ON ENLEVE UN PV
+                    monstresMort.add(monstre);
                     vies--;
 
                     Bukkit.broadcastMessage(ChatColor.RED + "Vies restantes : " + vies);
@@ -65,34 +80,23 @@ public class HealthManager {
 
             }
 
-            for (Mob monstre : monstresMorts) { //pour chaque monstre dans la liste des monstres à tuer
-
-                monstres.remove(monstre); //on enlève le monstre qui a été tué précédement
-                if(monstres.isEmpty()) {
-                    plugin.getGameManager().setGameState(GameState.LOBBY);
-                    Damageable targetATuer =  (Damageable)target;
-                    targetATuer.setHealth(0);
-                    //TODO METHODE DANS GAME MANAGER NEXT STATE
-                }
+            for (Mob monstre : monstresMort) {
+                monstre.setHealth(0.0);
 
             }
+
+
+
         }
 
-        else if(plugin.getGameManager().getGameState() != GameState.LOBBY) {
-            Bukkit.broadcast(Component.text("Bravo, vous êtes venu au bout de la vague"));
-            plugin.getGameManager().setGameState(GameState.LOBBY);
-            //TODO FAIRE UNE METHODE NEXT STEP
-        }
 
 
         if(vies <= 0)
         {
-            Bukkit.broadcast(Component.text("GAME OVER").color(NamedTextColor.RED));
-            plugin.getGameManager().setGameState(GameState.LOBBY);
-
-            //On tue le villageois
-            Damageable targetATuer =  (Damageable)target;
-            targetATuer.setHealth(0);
+            plugin.getGameManager().setGameState(GameState.LOOSE);
+            gameOn=false;
         }
     }
+
+
 }

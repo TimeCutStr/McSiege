@@ -21,7 +21,7 @@ public class ArmorMenuManager {
 
     public ArmorMenuManager(Player p) {
 
-        armorMenu = Bukkit.createInventory(p,27, Component.text("Weapon Menu"));
+        armorMenu = Bukkit.createInventory(p,27, Component.text("Marchand Menu"));
 
         armorMenu.addItem(AddEquipment(Material.LEATHER_HELMET));
         armorMenu.addItem(AddEquipment(Material.LEATHER_CHESTPLATE));
@@ -39,6 +39,8 @@ public class ArmorMenuManager {
         armorMenu.addItem(AddEquipment(Material.NETHERITE_CHESTPLATE));
         armorMenu.addItem(AddEquipment(Material.NETHERITE_LEGGINGS));
         armorMenu.addItem(AddEquipment(Material.NETHERITE_BOOTS));
+        armorMenu.addItem(AddEquipment(Material.GOLDEN_APPLE));
+
 
 
     }

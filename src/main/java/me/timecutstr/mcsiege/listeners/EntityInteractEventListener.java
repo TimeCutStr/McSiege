@@ -26,7 +26,6 @@ public class EntityInteractEventListener implements Listener {
             if (villager.getName().equals("WeaponShop")) {
                 event.setCancelled(true);
                 //TODO FAIRE UNE FONCTION POUR GERER LES MENU DANS LE MENU MANAGER
-                p.sendMessage(villager.getName());
                 WeaponMenuManager menu = new WeaponMenuManager(p);
                 p.openInventory(menu.getWeaponmenu());
             }
@@ -34,7 +33,6 @@ public class EntityInteractEventListener implements Listener {
             if (villager.getName().equals("ArmorShop")) {
                 event.setCancelled(true);
                 //TODO FAIRE UNE FONCTION POUR GERER LES MENU DANS LE MENU MANAGER
-                p.sendMessage(villager.getName());
                 ArmorMenuManager menu = new ArmorMenuManager(p);
                 p.openInventory(menu.getArmorMenu());
             }

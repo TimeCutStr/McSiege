@@ -69,7 +69,8 @@ prix:
   DIAMOND_SWORD : 25
   NETHERITE_SWORD : 30
   BOW : 5
-  ARROW : 10
+  ARROW : 2
+  SHIELD : 10
   LEATHER_HELMET : 1
   LEATHER_CHESTPLATE : 1
   LEATHER_LEGGINGS : 1
@@ -86,3 +87,15 @@ prix:
   NETHERITE_CHESTPLATE : 15
   NETHERITE_LEGGINGS : 15
   NETHERITE_BOOTS : 15
+  GOLDEN_APPLE : 5
+
+
+PrixEnchantement : 10
+
+openWaves : 4
+
+orDeDépart : 40
+
+ViesMax : 20
+
+JoueurMax : 5

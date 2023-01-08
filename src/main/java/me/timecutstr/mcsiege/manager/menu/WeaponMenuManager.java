@@ -24,7 +24,7 @@ public class WeaponMenuManager {
 
     public WeaponMenuManager(Player p) {
 
-        weaponmenu = Bukkit.createInventory(p,27, Component.text("Weapon Menu"));
+        weaponmenu = Bukkit.createInventory(p,27, Component.text("Marchand Menu"));
 
         weaponmenu.addItem(AddEquipment(Material.WOODEN_SWORD));
         weaponmenu.addItem(AddEquipment(Material.STONE_SWORD));
@@ -47,7 +47,12 @@ public class WeaponMenuManager {
     private ItemStack AddEquipment (Material material)
     {
         //FONCTION POUR AJOUTER UN ITEM AVEC UN PRIX A CHAQUE ITEM
+
         int price =  plugin.getConfig().getConfigurationSection("prix").getInt(material.name());
+            if(price == 0)
+            {
+                System.out.println("Attention : la ligne "+material.name() +" n'a pas été renseignée dans le config.yml");
+            }
         // TODO faire une verif que c'est bien un int
         ItemStack item = new ItemStack(material);
         ItemMeta itemMeta = item.getItemMeta();

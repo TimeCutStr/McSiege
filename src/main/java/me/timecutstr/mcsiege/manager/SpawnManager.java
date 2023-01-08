@@ -17,7 +17,7 @@ public class SpawnManager {
         this.gameManager = gameManager;
     }
 
-    public void spawn (int nombreASpawn, EntityType type, Location location, TargetManager targetManager, ListMonstreManager listMonstreManager)
+    public void spawn (int nombreASpawn, EntityType type, Location location, Entity target, ListMonstreManager listMonstreManager)
     {
 
         while (nombreASpawn > 0 ) {
@@ -25,13 +25,14 @@ public class SpawnManager {
 
             Entity monstre = location.getWorld().spawnEntity(location, type);
 
-            if (targetManager.getTarget() == null) {
+            if (target == null) {
                 System.out.println("pas de target");
             } else {
-                if (monstre instanceof Mob mob && targetManager.getTarget() instanceof LivingEntity target) {
-                    mob.setTarget(target);
+                if (monstre instanceof Mob mob && target instanceof LivingEntity t) {
+                    mob.setTarget(t);
                     mob.setCustomName("MONSTRE !!!");
                     mob.setCustomNameVisible(true);
+                    mob.setRemoveWhenFarAway(false);
                     listMonstreManager.addMonstre(mob);
 
                 }
