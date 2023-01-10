@@ -6,20 +6,11 @@ authors: [ TimeCutStr ]
 description: un plugin de mini jeux où les joueurs se font attaquer par des hordes de monstres
 website: https://linktr.ee/timecut
 commands:
-  spawn:
-    description: fait spawn un zombie
-    usage: /<command>
 
-  spawnTarget:
-    description: fait spawn le villageois victime
-    usage: /<command>
 
   setTarget:
     description: set la location du joueur comme position de la victime
     usage: /<command>
-
-  resetTarget:
-    description: reset la cible des zombies
 
   clear:
     description: Tue tous les monstres du niveau ainsi que la target
@@ -28,19 +19,22 @@ commands:
     description: Passe en setup pour mettre en place les spawns des monstres et le centre de la map
 
   setSpawn:
-    description: Permet de définir le point de spawn des monstres mais uniquement en phase de SetUp.
+    description: Permet de définir le point de spawn des monstres mais uniquement en phase de SetUp. Doit être suivit du numéro du spawn entre 1 et 4.
 
-  start:
-    description: Lance la partie si on se trouve dans le lobby
-
-  menu:
-    description: Ouvre un menu
+  setSpawnJoueur:
+    description: Permet de définir le point de spawn du joueur
 
   setWeaponShop:
     description: Inscrit la position du weapon Shop dans le Config.yml
 
   setArmorShop:
     description: Inscrit la position de l'armor Shop dans le Config.yml
+
+  setRevendeurShop:
+    description: Inscrit la position du revendeur Shop dans le Config.yml
+
+  start:
+    description: Lance la partie si on se trouve dans le lobby
 
   lobby:
     description: Retourn au lobby et clear le niveau
@@ -51,4 +45,3 @@ commands:
 
   reloadConfig:
     description: Prend en compte les modifications faites au config.yml
-

@@ -23,6 +23,15 @@ public class SetUpCommand implements CommandExecutor {
         //Verification que la commande a bien été faite InGame
         // TODO verif de permission
 
+        if(sender instanceof Player p) {
+            if (!(p.hasPermission("MineSiege.setup"))) {
+                p.sendMessage("Vous n'avez pas la permission (MineSiege.setup) de faire cette commande");
+                return false;
+            }
+        }
+
+
+
         Player p;
         if (sender instanceof Player) {
             p = (Player) sender;
@@ -133,6 +142,42 @@ public class SetUpCommand implements CommandExecutor {
                     plugin.getConfig().set("ArmorShopLocation", armorShopLocation);
                     plugin.saveConfig();
                     p.sendMessage("Le shop est créé");
+                    return true;
+
+
+                } else {
+                    p.sendMessage("Vous ne pouvez faire cette commande qu'en phase de SetUp");
+                    p.sendMessage("Pour entrer en phase de SetUp faite /setup depuis le lobby");
+                    return false;
+                }
+
+            case "setRevendeurShop":    //COMMANDE /SetArmorShop
+
+
+                //Verif qu'on est bien dans la phase de SETUP
+                if (plugin.getGameManager().getGameState() == GameState.SETUP) {
+                    Location RevendeurShopLocation = p.getLocation();
+                    plugin.reloadConfig();
+                    plugin.getConfig().set("RevendeurShopLocation", RevendeurShopLocation);
+                    plugin.saveConfig();
+                    p.sendMessage("Le shop est créé");
+                    return true;
+
+
+                } else {
+                    p.sendMessage("Vous ne pouvez faire cette commande qu'en phase de SetUp");
+                    p.sendMessage("Pour entrer en phase de SetUp faite /setup depuis le lobby");
+                    return false;
+                }
+
+            case "setSpawnJoueur":    //COMMANDE /SetArmorShop
+                //Verif qu'on est bien dans la phase de SETUP
+                if (plugin.getGameManager().getGameState() == GameState.SETUP) {
+                    Location SpawnJoueurLocation = p.getLocation();
+                    plugin.reloadConfig();
+                    plugin.getConfig().set("SpawnJoueurLocation", SpawnJoueurLocation);
+                    plugin.saveConfig();
+                    p.sendMessage("Le spawn des joueurs est créé");
                     return true;
 
 

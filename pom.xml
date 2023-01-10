@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>me.TimeCutStr</groupId>
-    <artifactId>McSiege</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>MineSiege</artifactId>
+    <version>0.0.4-ALPHA</version>
     <packaging>jar</packaging>
 
-    <name>McSiege</name>
+    <name>MineSiege</name>
 
     <description>un plugin de mini jeux où les joueurs se font attaquer par des hordes de monstres</description>
     <properties>
@@ -44,6 +44,14 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <outputDirectory>C:\Users\Dimitri\Desktop\serv test minecraft 1.19.2\plugins</outputDirectory>
+                </configuration>
             </plugin>
         </plugins>
         <resources>

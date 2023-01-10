@@ -11,13 +11,15 @@ import java.util.List;
 
 public class SpawnManager {
 
-    final GameManager gameManager;
-
+    final GameManager gameManager = McSiege.getPlugin().getGameManager();
+/*
     public SpawnManager(GameManager gameManager){
         this.gameManager = gameManager;
     }
 
-    public void spawn (int nombreASpawn, EntityType type, Location location, Entity target, ListMonstreManager listMonstreManager)
+ */
+
+    public static void spawn (int nombreASpawn, EntityType type, Location location, Entity target, ListMonstreManager listMonstreManager)
     {
 
         while (nombreASpawn > 0 ) {
@@ -42,7 +44,32 @@ public class SpawnManager {
 
     }
 
-    public void spawnVictime ()
+    public void spawnSpecial (int nombreASpawn, EntityType type, Location location, Entity target, ListMonstreManager listMonstreManager)
+    {
+
+        while (nombreASpawn > 0 ) {
+
+
+            Entity monstre = location.getWorld().spawnEntity(location, type);
+
+            if (target == null) {
+                System.out.println("pas de target");
+            } else {
+                if (monstre instanceof Mob mob && target instanceof LivingEntity t) {
+                    mob.setTarget(t);
+                    mob.setCustomName("MONSTRE !!!");
+                    mob.setCustomNameVisible(true);
+                    mob.setRemoveWhenFarAway(false);
+
+                }
+            }
+            nombreASpawn --;
+        }
+
+    }
+
+
+    public static void spawnVictime ()
     {
         //On récupère la position enregistrée dans le fichier de config
         Location spawnLocation = McSiege.getPlugin().getConfig().getLocation("targetLocation");
@@ -58,10 +85,10 @@ public class SpawnManager {
         }
 
         //On enregistre la target dans le gameManager
-        gameManager.setTarget(target);
+        McSiege.getPlugin().getGameManager().setTarget(target);
     }
 
-    public void spawnShop (String nom, List<LivingEntity> villagerShops)
+    public static void spawnShop (String nom, List<LivingEntity> villagerShops)
     {
         Location shopLocation = McSiege.getPlugin().getConfig().getLocation(nom+"Location");
         LivingEntity villager = (LivingEntity) shopLocation.getWorld().spawnEntity(shopLocation, EntityType.VILLAGER);

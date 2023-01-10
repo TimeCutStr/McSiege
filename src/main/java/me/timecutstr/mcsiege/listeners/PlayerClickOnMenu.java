@@ -16,9 +16,13 @@ public class PlayerClickOnMenu implements Listener {
         McSiege plugin = McSiege.getPlugin();
         if(event.getView().getTitle().equalsIgnoreCase("Marchand Menu"))
         {
+            if(event.getCurrentItem() == null)
+            {
+                return;
+            }
             event.setCancelled(true);
-
             ItemStack item = event.getCurrentItem();
+
             int price =  plugin.getConfig().getConfigurationSection("prix").getInt(item.getType().name());
             if(PlayerPay.pay(p,price)) //On utilise la fonction pay de "playperPay" pour faire payer le joueur. Si il ne peut pas payer revoit false
             {

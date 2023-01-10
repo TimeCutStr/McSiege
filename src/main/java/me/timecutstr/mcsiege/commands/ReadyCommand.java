@@ -17,11 +17,14 @@ public class ReadyCommand implements CommandExecutor {
             return true;
         }
 
-        else {
+        else if (!(sender instanceof Player)) {
+            System.out.println("Cette commande ne peut pas être faite dans la console");
             return false;
         }
 
-
+        else {
+            return false;
+        }
 
     }
 }

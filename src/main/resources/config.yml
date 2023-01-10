@@ -43,6 +43,15 @@ spawnLocation4:
   pitch: 7.049968
   yaw: 86.70648
 
+SpawnJoueurLocation:
+  ==: org.bukkit.Location
+  world: world
+  x: 43.72024584935068
+  y: -56.0
+  z: 165.74642971946668
+  pitch: 7.049968
+  yaw: 86.70648
+
 WeaponShopLocation:
   ==: org.bukkit.Location
   world: world
@@ -58,6 +67,15 @@ ArmorShopLocation:
   x: 37.70339422931514
   y: -60.0
   z: 159.42541493356353
+  pitch: 3.2998495
+  yaw: -4.965576
+
+RevendeurShopLocation:
+  ==: org.bukkit.Location
+  world: world
+  x: 49.984
+  y: -60.0
+  z: 170.579
   pitch: 3.2998495
   yaw: -4.965576
 
@@ -99,3 +117,5 @@ orDeDépart : 40
 ViesMax : 20
 
 JoueurMax : 5
+
+RécompenseFinDeNiveau : 20

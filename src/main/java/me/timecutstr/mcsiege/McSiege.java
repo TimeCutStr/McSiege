@@ -5,7 +5,6 @@ import me.timecutstr.mcsiege.commands.*;
 import me.timecutstr.mcsiege.manager.GameManager;
 import me.timecutstr.mcsiege.manager.GameState;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public final class McSiege extends JavaPlugin {
 
@@ -25,12 +24,12 @@ public final class McSiege extends JavaPlugin {
         this.gameManager = new GameManager(this);
 
         //gestion des commandes
-        getCommand("spawnTarget").setExecutor(new SpawnTarget());
         getCommand("setTarget").setExecutor(new SetUpCommand());
         getCommand("setSpawn").setExecutor(new SetUpCommand());
+        getCommand("setSpawnJoueur").setExecutor(new SetUpCommand());
         getCommand("setWeaponShop").setExecutor(new SetUpCommand());
         getCommand("setArmorShop").setExecutor(new SetUpCommand());
-        getCommand("resetTarget").setExecutor(new ResetTargetCommand());
+        getCommand("setRevendeurShop").setExecutor(new SetUpCommand());
         getCommand("clear").setExecutor(new LevelClearCommand());
         getCommand("setup").setExecutor(new SetUpCommand());
         getCommand("start").setExecutor(new StartCommand());
@@ -39,12 +38,13 @@ public final class McSiege extends JavaPlugin {
         getCommand("reloadConfig").setExecutor(new ReloadConfigCommand());
 
 
+
         //gestion listener
         getServer().getPluginManager().registerEvents(new MonsterDeathListener(), this);
         getServer().getPluginManager().registerEvents(new EntityInteractEventListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerClickOnMenu(), this);
         getServer().getPluginManager().registerEvents(new InteractWithPanneau(), this);
-        getServer().getPluginManager().registerEvents(new SpawnPlayerListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerDeathListener(), this);
         getServer().getPluginManager().registerEvents(new DestroyBlockListener(), this);
 
 
@@ -68,6 +68,7 @@ public final class McSiege extends JavaPlugin {
     public GameManager getGameManager() {
         return gameManager;
     }
+
 
 
 }

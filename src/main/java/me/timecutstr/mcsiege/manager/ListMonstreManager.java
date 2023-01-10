@@ -4,10 +4,8 @@ import me.timecutstr.mcsiege.McSiege;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.*;
-import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ListMonstreManager {
 
@@ -59,6 +57,7 @@ public class ListMonstreManager {
         }
 
 
+
     }
 
     public void RetireDeLaListe (Mob monstreMort) {
@@ -97,13 +96,16 @@ public class ListMonstreManager {
 
     public void CheckListVide ()
     {
+        System.out.println("monstre.isEmpty : " + monstres.isEmpty());
+        System.out.println("gameStarted : " + plugin.getGameManager().isGameStarted());
+        System.out.println("wave : " + plugin.getGameManager().getWave());
 
         // si la liste des monstres est vide, on passe au gamestate suivant
-        if(monstres.isEmpty() && plugin.getGameManager().isGameStarted() && plugin.getGameManager().getWave() == 5)
+        if(monstres.isEmpty() && plugin.getGameManager().isGameStarted() && plugin.getGameManager().getWave() >= 5)
         {
             Bukkit.broadcast(Component.text("Vous avez tué tous les monstres !"));
             McSiege.getPlugin().getGameManager().NextGameState();
-            McSiege.getPlugin().getGameManager().RecompenseFinWave();
+            McSiege.getPlugin().getGameManager().RecompenseFinNiveau();
         }
 
     }
