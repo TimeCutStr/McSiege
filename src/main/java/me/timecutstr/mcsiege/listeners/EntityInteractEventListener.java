@@ -4,8 +4,10 @@ import me.timecutstr.mcsiege.McSiege;
 import me.timecutstr.mcsiege.manager.GameManager;
 import me.timecutstr.mcsiege.manager.menu.ArmorMenuManager;
 import me.timecutstr.mcsiege.manager.menu.WeaponMenuManager;
+import me.timecutstr.mcsiege.staticMethode.WorldCheck;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
@@ -26,6 +28,10 @@ public class EntityInteractEventListener implements Listener {
     @EventHandler
     public void OuverturMenuEquipement(PlayerInteractAtEntityEvent event)
     {
+        if(!WorldCheck.worldCheck(event.getPlayer().getWorld())) {
+            return;
+        }
+
         Player p = event.getPlayer();
         // if(event.getRightClicked() instanceof Block  TODO Regarder comment gérer les interactions avec les panneaux
 

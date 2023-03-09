@@ -19,7 +19,7 @@ public class CountDownNextPhase extends BukkitRunnable {
 
         }
 
-        if(McSiege.getPlugin().getGameManager().getGameState() == GameState.LOBBY)
+        if(McSiege.getPlugin().getGameManager().isGameStarted() == false)
         {
             this.cancel();
         }

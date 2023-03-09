@@ -3,6 +3,7 @@ package me.timecutstr.mcsiege.commands;
 import me.timecutstr.mcsiege.McSiege;
 import me.timecutstr.mcsiege.manager.GameManager;
 import me.timecutstr.mcsiege.manager.GameState;
+import me.timecutstr.mcsiege.staticMethode.WorldCheck;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -19,6 +20,11 @@ public class SetUpCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+
+        //VERIF QUE CET EVENEMENT NE S'APPLIQUE QU'A MINESIEGE
+        if(sender instanceof Player p && !WorldCheck.worldCheck(p.getWorld())) {
+            return false;
+        }
 
         //Verification que la commande a bien été faite InGame
         // TODO verif de permission

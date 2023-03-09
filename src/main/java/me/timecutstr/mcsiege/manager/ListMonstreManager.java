@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class ListMonstreManager {
 
@@ -47,6 +48,7 @@ public class ListMonstreManager {
         }
         plugin.getGameManager().getVillagerShops().clear();
 
+
         ArrayList<Mob> monstreATuer = new ArrayList<>() ;
         for (Mob monstre: monstres) {
             monstreATuer.add(monstre);
@@ -54,6 +56,15 @@ public class ListMonstreManager {
         for (Mob monstre: monstreATuer
         ) {
             monstre.setHealth(0);
+        }
+
+        Collection<Entity> entities = Bukkit.getWorld("minesiege").getEntities();
+
+        for (Entity e: entities ) {
+            if (!(e instanceof Player)) {
+                e.remove();
+            }
+
         }
 
 
@@ -96,10 +107,6 @@ public class ListMonstreManager {
 
     public void CheckListVide ()
     {
-        System.out.println("monstre.isEmpty : " + monstres.isEmpty());
-        System.out.println("gameStarted : " + plugin.getGameManager().isGameStarted());
-        System.out.println("wave : " + plugin.getGameManager().getWave());
-
         // si la liste des monstres est vide, on passe au gamestate suivant
         if(monstres.isEmpty() && plugin.getGameManager().isGameStarted() && plugin.getGameManager().getWave() >= 5)
         {
@@ -109,4 +116,5 @@ public class ListMonstreManager {
         }
 
     }
+
 }

@@ -21,22 +21,24 @@ import java.util.Map;
 
 public class WaveManager {
 
-    private ArrayList<Player> players;
+    private List<Player> players;
     private BukkitTask bukkitTask;
     private GameManager gameManager;
     private Entity target;
     private ListMonstreManager listMonstreManager;
 
     private int niveau;
+    private int tic;
     String ssTtire;
-    Map<Integer, Mob> mapMonstre;
-    Map<Integer, Mob> mapMonstreFinal;
+    Map<Integer, EntityType> mapMonstre;
+    Map<Integer, EntityType> mapMonstreFinal;
 
 
-    public WaveManager (int niveau, String ssTitre, ArrayList<Player> players, GameManager gameManager, Entity target, ListMonstreManager listMonstreManager)
+    public WaveManager (int niveau, int tic, String ssTitre, List<Player> players, GameManager gameManager, Entity target, ListMonstreManager listMonstreManager)
     {
         //On récupère depuis le gameManager les différents manageurs
         this.niveau = niveau;
+        this.tic = tic;
         this.ssTtire = ssTitre;
         this.players = players;
         this.gameManager = gameManager;
@@ -47,12 +49,12 @@ public class WaveManager {
 
     }
 
-    public void addMonstre (int nb, Mob monstre)  //Méthode pour ajouter un monstre à spawn
+    public void addMonstre (int nb, EntityType monstre)  //Méthode pour ajouter un monstre à spawn
     {
         mapMonstre.put(Integer.valueOf(nb),monstre);
     }
 
-    public void addMonstreFinal (int nb, Mob monstre)  //Méthode pour ajouter un monstre à spawn uniquement sur la dernière vague
+    public void addMonstreFinal (int nb, EntityType monstre)  //Méthode pour ajouter un monstre à spawn uniquement sur la dernière vague
     {
         mapMonstreFinal.put(Integer.valueOf(nb),monstre);
     }
@@ -69,7 +71,7 @@ public class WaveManager {
             Component compSSTitre = Component.text(ssTtire);
 
             Title titre = Title.title(compTitre, compSSTitre);
-            p.sendTitle("Vague 5","Je savais même pas que ça existait ces trucs !",5,100,5);
+            p.showTitle(titre);
         }
 
         gameManager.setWave(0);
@@ -86,21 +88,21 @@ public class WaveManager {
                 Bukkit.broadcast(Component.text("Vague :" + gameManager.getWave()));
                 for (int i = 1; i <= gameManager.getOpenWaves(); i++) {
                     Location location = McSiege.getPlugin().getConfig().getLocation("spawnLocation"+i);
-                    for (Map.Entry<Integer, Mob> entry : mapMonstre.entrySet())
+                    for (Map.Entry<Integer, EntityType> entry : mapMonstre.entrySet())
                     {
-                        SpawnManager.spawn(entry.getKey().intValue(), entry.getValue().getType() ,location,target,listMonstreManager);
+                        SpawnManager.spawn(entry.getKey().intValue(), entry.getValue() ,location,target,listMonstreManager);
                     }
 
                     if(gameManager.getWave() == 5)
                     {
-                        for (Map.Entry<Integer, Mob> entry : mapMonstreFinal.entrySet())
+                        for (Map.Entry<Integer, EntityType> entry : mapMonstreFinal.entrySet())
                         {
-                            SpawnManager.spawn(entry.getKey().intValue(), entry.getValue().getType() ,location,target,listMonstreManager);
+                            SpawnManager.spawn(entry.getKey().intValue(), entry.getValue() ,location,target,listMonstreManager);
                         }
                     }
                 }
 
             }
-        }.runTaskTimer(McSiege.getPlugin(), 0, 600); // exécute la tâche toutes les 30 secondes (20 ticks)
+        }.runTaskTimer(McSiege.getPlugin(), 0, tic); // exécute la tâche toutes les 30 secondes (20 ticks)
     }
 }

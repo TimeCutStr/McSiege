@@ -1,11 +1,16 @@
 package me.timecutstr.mcsiege.manager;
 
 import me.timecutstr.mcsiege.McSiege;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
+import org.bukkit.util.Vector;
 
 import java.util.List;
 
@@ -23,16 +28,19 @@ public class SpawnManager {
     {
 
         while (nombreASpawn > 0 ) {
+            double x = (Math.random()*20)-10;
+            double y = (Math.random()*20)-10;
 
-
-            Entity monstre = location.getWorld().spawnEntity(location, type);
+            Location spawnLocation = new Location(location.getWorld(), location.getX(), location.getY(), location.getZ());
+            spawnLocation.add(new Vector(x,0,y));
+            Entity monstre = location.getWorld().spawnEntity(spawnLocation, type);
 
             if (target == null) {
                 System.out.println("pas de target");
             } else {
                 if (monstre instanceof Mob mob && target instanceof LivingEntity t) {
                     mob.setTarget(t);
-                    mob.setCustomName("MONSTRE !!!");
+                    mob.customName(Component.text(mob.getName()).color(NamedTextColor.RED).decorate(TextDecoration.BOLD));
                     mob.setCustomNameVisible(true);
                     mob.setRemoveWhenFarAway(false);
                     listMonstreManager.addMonstre(mob);

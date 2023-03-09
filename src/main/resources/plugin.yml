@@ -43,5 +43,6 @@ commands:
     description: Inscrit le joueur dans le jeu
     aliases: ready
 
-  reloadConfig:
+  reloadconfig:
+    usage : /<command>
     description: Prend en compte les modifications faites au config.yml

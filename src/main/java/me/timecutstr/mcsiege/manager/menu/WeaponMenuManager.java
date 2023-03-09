@@ -26,15 +26,13 @@ public class WeaponMenuManager {
 
         weaponmenu = Bukkit.createInventory(p,27, Component.text("Marchand Menu"));
 
-        weaponmenu.addItem(AddEquipment(Material.WOODEN_SWORD));
-        weaponmenu.addItem(AddEquipment(Material.STONE_SWORD));
-        weaponmenu.addItem(AddEquipment(Material.GOLDEN_SWORD));
         weaponmenu.addItem(AddEquipment(Material.IRON_SWORD));
         weaponmenu.addItem(AddEquipment(Material.DIAMOND_SWORD));
         weaponmenu.addItem(AddEquipment(Material.NETHERITE_SWORD));
         weaponmenu.addItem(AddEquipment(Material.BOW));
         weaponmenu.addItem(AddEquipment(Material.ARROW, 64));
         weaponmenu.addItem(AddEquipment(Material.SHIELD));
+        weaponmenu.addItem(AddEquipment(Material.EGG));
 
 
 
@@ -53,6 +51,19 @@ public class WeaponMenuManager {
             {
                 System.out.println("Attention : la ligne "+material.name() +" n'a pas été renseignée dans le config.yml");
             }
+
+        if(material.name() == Material.EGG.name())
+        {
+            ItemStack item = new ItemStack(material);
+            ItemMeta itemMeta = item.getItemMeta();
+            List<Component> epeeLore = new ArrayList<>();
+            epeeLore.add(Component.text(price + " Gold Nugget").color(NamedTextColor.GOLD));
+            epeeLore.add(Component.text("Spawn un Golem de Fer").color(NamedTextColor.RED));
+            itemMeta.lore(epeeLore);
+            item.setItemMeta(itemMeta);
+            return item;
+        }
+
         // TODO faire une verif que c'est bien un int
         ItemStack item = new ItemStack(material);
         ItemMeta itemMeta = item.getItemMeta();

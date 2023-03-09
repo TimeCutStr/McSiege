@@ -78,6 +78,10 @@ public class HealthManager {
 
                 }
 
+                if(distance > 100) {
+                    monstresMort.add(monstre);
+                }
+
             }
 
             for (Mob monstre : monstresMort) {
@@ -95,6 +99,34 @@ public class HealthManager {
         {
             plugin.getGameManager().setGameState(GameState.LOOSE);
             gameOn=false;
+        }
+    }
+
+    public void distanceMonstre ( ArrayList<Monster> monstres, Entity target)
+    {
+        if(!monstres.isEmpty()) { //si il y a des monstres dans la liste
+            for (Mob monstre : monstres) { //pour chaque monstre dans la liste des monstres
+                Location mL = monstre.getLocation();
+                Location tL = target.getLocation();
+                Double distX;
+                Double distZ;
+                Double distance;
+                // CALCULE DE LA DISTANCE ENTRE LE MONSTRE ET LA TARGET
+                if (mL.getX() > tL.getX()) {
+                    distX = mL.getX() - tL.getX();
+                } else {
+
+                    distX = tL.getX() - mL.getX();
+                }
+
+                if (mL.getZ() > tL.getZ()) {
+                    distZ = mL.getZ() - tL.getZ();
+                } else {
+                    distZ = tL.getZ() - mL.getZ();
+                }
+
+                distance = Math.sqrt(distX * distX + distZ * distZ);
+            }
         }
     }
 

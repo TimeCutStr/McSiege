@@ -1,6 +1,6 @@
 targetLocation:
   ==: org.bukkit.Location
-  world: world
+  world: minesiege
   x: 43.69999998807907
   y: -60.0625
   z: 165.60282931229648
@@ -9,7 +9,7 @@ targetLocation:
 
 spawnLocation1:
   ==: org.bukkit.Location
-  world: world
+  world: minesiege
   x: -23.941458659410397
   y: -60.0
   z: 165.53173242770683
@@ -18,7 +18,7 @@ spawnLocation1:
 
 spawnLocation2:
   ==: org.bukkit.Location
-  world: world
+  world: minesiege
   x: 42.558939100485254
   y: -60.0
   z: 103.44090144397943
@@ -27,7 +27,7 @@ spawnLocation2:
 
 spawnLocation3:
   ==: org.bukkit.Location
-  world: world
+  world: minesiege
   x: 54.13411446602575
   y: -60.0
   z: 234.07406943491944
@@ -36,7 +36,7 @@ spawnLocation3:
 
 spawnLocation4:
   ==: org.bukkit.Location
-  world: world
+  world: minesiege
   x: 96.72024584935068
   y: -60.0
   z: 165.74642971946668
@@ -45,7 +45,7 @@ spawnLocation4:
 
 SpawnJoueurLocation:
   ==: org.bukkit.Location
-  world: world
+  world: minesiege
   x: 43.72024584935068
   y: -56.0
   z: 165.74642971946668
@@ -54,7 +54,7 @@ SpawnJoueurLocation:
 
 WeaponShopLocation:
   ==: org.bukkit.Location
-  world: world
+  world: minesiege
   x: 38.139352285358484
   y: -60.0
   z: 170.69999998807907
@@ -63,7 +63,7 @@ WeaponShopLocation:
 
 ArmorShopLocation:
   ==: org.bukkit.Location
-  world: world
+  world: minesiege
   x: 37.70339422931514
   y: -60.0
   z: 159.42541493356353
@@ -72,7 +72,7 @@ ArmorShopLocation:
 
 RevendeurShopLocation:
   ==: org.bukkit.Location
-  world: world
+  world: minesiege
   x: 49.984
   y: -60.0
   z: 170.579
@@ -80,15 +80,13 @@ RevendeurShopLocation:
   yaw: -4.965576
 
 prix:
-  WOODEN_SWORD: 5
-  STONE_SWORD : 10
-  GOLDEN_SWORD : 15
   IRON_SWORD : 20
   DIAMOND_SWORD : 25
   NETHERITE_SWORD : 30
   BOW : 5
-  ARROW : 2
+  ARROW : 5
   SHIELD : 10
+  EGG : 20
   LEATHER_HELMET : 1
   LEATHER_CHESTPLATE : 1
   LEATHER_LEGGINGS : 1
@@ -109,6 +107,10 @@ prix:
 
 
 PrixEnchantement : 10
+PrixEnchantementFlamme : 20
+PrixEnchantementInfinity : 15
+PrixEnchantementKnockBack : 10
+PrixEnchantementThorn : 15
 
 openWaves : 4
 
@@ -119,3 +121,7 @@ ViesMax : 20
 JoueurMax : 5
 
 RécompenseFinDeNiveau : 20
+
+RespawnTime : 5
+
+World : minesiege

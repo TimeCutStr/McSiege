@@ -6,7 +6,6 @@ import me.timecutstr.mcsiege.manager.BukkitRunnable.CountDownNextPhase;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -16,7 +15,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +42,9 @@ public class GameManager {
     private final ListMonstreManager listMonstreManager;
     private final TargetManager targetManager;
 
+    private WaveManager waveManager;
 
+    private Location location;
 
     public List<LivingEntity> getVillagerShops() {
         return villagerShops;
@@ -57,10 +57,18 @@ public class GameManager {
     }
 
     public void addPlayers(Player player) {
+
+        if(players.contains(player))
+        {
+            players.remove(player);
+            Bukkit.broadcast(Component.text(player.getName() + " n'est plus prêt !"));
+            return;
+        }
+
         int joeurMax = McSiege.getPlugin().getConfig().getInt("JoueurMax");
 
         this.players.add(player);
-        Bukkit.broadcast(Component.text(player.getName()+" est prèt !"));
+        Bukkit.broadcast(Component.text(player.getName()+" est prêt !"));
 
 
         if(this.players.size() == McSiege.getPlugin().getConfig().getInt("JoueurMax")) {
@@ -132,9 +140,20 @@ public class GameManager {
 
     //LIST METHODE
 
-    public void Clear ()
+    public void clear()
     {
+        gameStarted = false;
         listMonstreManager.clear();
+
+
+
+    }
+
+    public void reload()
+    {
+        healthManager = new HealthManager(plugin.getConfig().getInt("ViesMax"));
+        openWaves = plugin.getConfig().getInt("openWaves");
+        setGameState(GameState.LOBBY);
     }
 
     public boolean MonstreIsDansListe (Mob monstre)
@@ -205,6 +224,8 @@ public class GameManager {
             case 8 -> setGameState(GameState.LEVEL4);
             case 9 -> setGameState(GameState.SHOP);
             case 10 -> setGameState(GameState.LEVEL5);
+            //case 11 -> setGameState(GameState.SHOP);
+            //case 12 -> setGameState(GameState.BOSS);
             case 11 -> setGameState(GameState.WON);
             default -> setGameState(GameState.LOBBY);
         }
@@ -265,7 +286,7 @@ public class GameManager {
 
             case LOBBY :
                 gameStarted = false;
-                Clear(); //On clear tout ce qui peut rester des anciennes games
+                clear(); //On clear tout ce qui peut rester des anciennes games
                 chunkLoad.unloadChunks(); //On unload les chunks pour si le jeu à planté ou si les joueurs ont fini une partie
                 healthManager.resetHealthManager();
                 players.clear();
@@ -334,7 +355,7 @@ public class GameManager {
                     p.setFoodLevel(20);
                 }
 
-                countdown = 15;
+                countdown = 40;
                 countDownNextPhase = new CountDownNextPhase();
                 countDownNextPhase.runTaskTimer(plugin, 0L, 20L);
                 gameStarted = true;
@@ -350,179 +371,85 @@ public class GameManager {
             break;
 
             case LEVEL1:
-                Bukkit.broadcast(Component.text("C'est parti pour le niveau 1 !"));
-                for (Player p : players) {
-                    p.sendTitle("Niveau 1","Quelques zombies et squelettes pour se mettre en jambe !",5,100,5);
-                }
-                wave = 0;
-                bukkitTask = new BukkitRunnable()  {
-                    @Override
-                    public void run() {
-                        wave ++;
-                        if(gameStarted == false || wave > 5)
-                        {
-                            this.cancel();
-                            return;
-                        }
-
-                        Bukkit.broadcast(Component.text("Vague :" + wave));
-                        for (int i = 1; i <= openWaves; i++) {
-                            Location location = plugin.getConfig().getLocation("spawnLocation"+i);
-                            SpawnManager.spawn(2,EntityType.ZOMBIE ,location,targetManager.getTarget(),listMonstreManager);
-                            SpawnManager.spawn(1,EntityType.SKELETON,location,targetManager.getTarget(),listMonstreManager);
-                            if(wave == 5)
-                            {
-                                SpawnManager.spawn(1,EntityType.WITHER_SKELETON,location,targetManager.getTarget(),listMonstreManager);
-                            }
-                        }
-
-
-
-                    }
-                }.runTaskTimer(McSiege.getPlugin(), 0, 300); // exécute la tâche toutes les 15 secondes (20 ticks)
-
-
-
-
-
+                waveManager = new WaveManager(1, 450,"Quelques Zombies et squelette pour se mettre en jambe",
+                        players,this,getTarget(),listMonstreManager);  // Niveau 1 avec des vagues tous les 400 tic donc 20 sec
+                waveManager.addMonstre(4,EntityType.ZOMBIE);
+                //waveManager.addMonstre(1,EntityType.SKELETON);
+                waveManager.addMonstreFinal(1, EntityType.STRAY);
+                waveManager.startWave();
             break;
 
             case LEVEL2:
-                Bukkit.broadcast(Component.text("C'est parti pour le niveau 2 !"));
-                for (Player p : players) {
-                    Title titre = Title.title(Component.text("text"),Component.text("SousText"));
-                    p.showTitle(titre);
-                    //p.sendTitle("Niveau 2","Et si on ajoutais nos meilleurs amis ?",5,100,5);
-                }
-                wave = 0;
-                bukkitTask = new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        wave ++;
-                        if(gameStarted == false || wave > 5)
-                        {
-                            this.cancel();
-                            return;
-                        }
-
-                        Bukkit.broadcast(Component.text("Vague :" + wave));
-                        for (int i = 1; i <= openWaves; i++) {
-                            Location location = plugin.getConfig().getLocation("spawnLocation"+i);
-                            SpawnManager.spawn(3,EntityType.ZOMBIE ,location,targetManager.getTarget(),listMonstreManager);
-                            SpawnManager.spawn(2,EntityType.SKELETON,location,targetManager.getTarget(),listMonstreManager);
-                            SpawnManager.spawn(1,EntityType.CREEPER,location,targetManager.getTarget(),listMonstreManager);
-                            if(wave == 5)
-                            {
-                                SpawnManager.spawn(1,EntityType.ENDERMAN,location,targetManager.getTarget(),listMonstreManager);
-                            }
-                        }
-
-                        System.out.println(wave);
-
-                    }
-                }.runTaskTimer(McSiege.getPlugin(), 0, 600); // exécute la tâche toutes les 30 secondes (20 ticks)
+                waveManager = new WaveManager(2, 500,"Et si on ajoutais nos meilleurs amis ?",
+                        players,this,getTarget(),listMonstreManager);  // Niveau 1 avec des vagues tous les 400 tic donc 20 sec
+                waveManager.addMonstre(3,EntityType.ZOMBIE);
+                waveManager.addMonstre(2,EntityType.SKELETON);
+                waveManager.addMonstre(1,EntityType.CREEPER);
+                waveManager.addMonstreFinal(1, EntityType.ENDERMAN);
+                waveManager.startWave();
             break;
 
             case LEVEL3:
-                Bukkit.broadcast(Component.text("C'est parti pour le niveau 3 !"));
-                for (Player p : players) {
-                    p.sendTitle("Niveau 3","J'espère que vous avez pris un bouclier",5,100,5);
-                }
-                wave = 0;
-                bukkitTask.cancel();
-                bukkitTask =new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        wave ++;
-                        if(gameStarted == false || wave > 5)
-                        {
-                            this.cancel();
-                            return;
-                        }
-
-                        Bukkit.broadcast(Component.text("Vague :" + wave));
-                        for (int i = 1; i <= openWaves; i++) {
-                            Location location = plugin.getConfig().getLocation("spawnLocation"+i);
-                            SpawnManager.spawn(4,EntityType.ZOMBIE ,location,targetManager.getTarget(),listMonstreManager);
-                            SpawnManager.spawn(3,EntityType.SKELETON,location,targetManager.getTarget(),listMonstreManager);
-                            SpawnManager.spawn(2,EntityType.CREEPER,location,targetManager.getTarget(),listMonstreManager);
-                            if(wave == 5)
-                            {
-                                SpawnManager.spawn(10,EntityType.SILVERFISH,location,targetManager.getTarget(),listMonstreManager);
-                            }
-                        }
-
-                    }
-                }.runTaskTimer(McSiege.getPlugin(), 0, 600); // exécute la tâche toutes les 30 secondes (20 ticks)
-            break;
+                waveManager = new WaveManager(3, 600,"J'espère que vous avez pris un bouclier...",
+                        players,this,getTarget(),listMonstreManager);  // Niveau 1 avec des vagues tous les 400 tic donc 20 sec
+                waveManager.addMonstre(3,EntityType.ZOMBIE);
+                waveManager.addMonstre(4,EntityType.SKELETON);
+                waveManager.addMonstre(2,EntityType.CREEPER);
+                waveManager.addMonstreFinal(10, EntityType.SILVERFISH);
+                waveManager.startWave();
+             break;
 
             case LEVEL4:
-                Bukkit.broadcast(Component.text("C'est parti pour le niveau 4 !"));
-                for (Player p : players) {
-                    p.sendTitle("Niveau 4","Vous avez pas tout misé sur l'arc n'est ce pas ?",5,100,5);
-                }
-                wave = 0;
-                bukkitTask = new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        wave ++;
-                        if(gameStarted == false || wave > 5)
-                        {
-                            this.cancel();
-                            return;
-                        }
+                waveManager = new WaveManager(4, 650,"Vous avez pas tout misé sur l'arc n'est ce pas ?",
+                        players,this,getTarget(),listMonstreManager);  // Niveau 1 avec des vagues tous les 400 tic donc 20 sec
+                waveManager.addMonstre(5,EntityType.ZOMBIE);
+                waveManager.addMonstre(4,EntityType.SKELETON);
+                waveManager.addMonstre(2,EntityType.CREEPER);
+                waveManager.addMonstre(1,EntityType.ENDERMAN);
+                waveManager.addMonstreFinal(1, EntityType.GHAST);
+                waveManager.startWave();
 
-                        Bukkit.broadcast(Component.text("Vague :" + wave));
-                        for (int i = 1; i <= openWaves; i++) {
-                            Location location = plugin.getConfig().getLocation("spawnLocation"+i);
-                            SpawnManager.spawn(5,EntityType.ZOMBIE ,location,targetManager.getTarget(),listMonstreManager);
-                            SpawnManager.spawn(3,EntityType.SKELETON,location,targetManager.getTarget(),listMonstreManager);
-                            SpawnManager.spawn(2,EntityType.CREEPER,location,targetManager.getTarget(),listMonstreManager);
-                            if(wave == 5)
-                            {
-                                SpawnManager.spawn(2,EntityType.ENDERMAN,location,targetManager.getTarget(),listMonstreManager);
-                            }
-                        }
-
-
-                    }
-                }.runTaskTimer(McSiege.getPlugin(), 0, 600); // exécute la tâche toutes les 30 secondes (20 ticks)
             break;
 
             case LEVEL5:
-                Bukkit.broadcast(Component.text("C'est parti pour le niveau 5 !"));
-                for (Player p : players) {
-                    p.sendTitle("Vague 5","Je savais même pas que ça existait ces trucs !",5,100,5);
-                }
-                wave = 0;
-                bukkitTask = new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        wave ++;
-                        if(gameStarted == false || wave > 5)
-                        {
-                            this.cancel();
-                            return;
-                        }
+                waveManager = new WaveManager(5, 700,"Vous avez pas tout misé sur l'arc n'est ce pas ?",
+                        players,this,getTarget(),listMonstreManager);  // Niveau 1 avec des vagues tous les 400 tic donc 20 sec
+                waveManager.addMonstre(6,EntityType.ZOMBIE);
+                waveManager.addMonstre(5,EntityType.SKELETON);
+                waveManager.addMonstre(3,EntityType.CREEPER);
+                waveManager.addMonstre(1,EntityType.WITCH);
+                waveManager.addMonstreFinal(6, EntityType.WITHER_SKELETON);
+                waveManager.startWave();
 
-                        Bukkit.broadcast(Component.text("Vague :" + wave));
-                        for (int i = 1; i <= openWaves; i++) {
-                            Location location = plugin.getConfig().getLocation("spawnLocation"+i);
-                            SpawnManager.spawn(6,EntityType.ZOMBIE ,location,targetManager.getTarget(),listMonstreManager);
-                            SpawnManager.spawn(5,EntityType.SKELETON,location,targetManager.getTarget(),listMonstreManager);
-                            SpawnManager.spawn(3,EntityType.CREEPER,location,targetManager.getTarget(),listMonstreManager);
-                            SpawnManager.spawn(1,EntityType.ENDERMAN,location,targetManager.getTarget(),listMonstreManager);
-                            if(wave == 5)
-                            {
-                                SpawnManager.spawn(6,EntityType.WITHER_SKELETON,location,targetManager.getTarget(),listMonstreManager);
-                            }
-                        }
-
-                    }
-                }.runTaskTimer(McSiege.getPlugin(), 0, 600); // exécute la tâche toutes les 30 secondes (20 ticks)
             break;
 
-            case WON:
+            case WAVESPECIAL1:
+
+                float random = (float)(Math.random()*players.size()-0.5);
+                Bukkit.broadcast(Component.text(random));
+                int joueurSelect = Math.round((random));
+                for (Player p : players) {
+                    p.sendTitle("Vague Special ","Protégez "+players.get(joueurSelect).getName()+" !!!!",5,100,5);
+                }
+                location = plugin.getConfig().getLocation("spawnLocation"+(joueurSelect+1));
+                SpawnManager.spawn(3,EntityType.ENDERMAN,location,(LivingEntity)players.get(joueurSelect),listMonstreManager);
+                wave = 5;
+
+            break;
+
+            case BOSS:
+
+                for (Player p : players) {
+                    p.sendTitle("BOSS FINAL","Bonne chance",5,100,5);
+                    p.playSound(p.getLocation(),Sound.ENTITY_ENDER_DRAGON_GROWL,10,1);
+                }
+                location = plugin.getConfig().getLocation("spawnLocation1");
+                SpawnManager.spawn(1,EntityType.ENDER_DRAGON,location,getTarget(),listMonstreManager);
+                wave = 5;
+
+            break;
+
+            case WON:  //TODO APPRENDRE A GERER UN ENDER DRAGON
                 for (Player p : players) {
                     p.sendTitle("VICTOIRE !","Incroyable, vous êtes venu à bout du jeux !",5,100,5);
                     p.playSound(p.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_TWINKLE,1,1);
@@ -535,28 +462,18 @@ public class GameManager {
                     gameStarted = false;
             break;
 
-            case WAVESPECIAL1:
 
-                float random = (float)(Math.random()*players.size()-0.5);
-                int joueurSelect = Math.round((random));
-                for (Player p : players) {
-                    p.sendTitle("Vague Special ","Protégez "+players.get(joueurSelect).getName()+" !!!!",5,100,5);
-                }
-                Location location = plugin.getConfig().getLocation("spawnLocation"+(joueurSelect+1));
-                SpawnManager.spawn(3,EntityType.ENDERMAN,location,(LivingEntity)players.get(joueurSelect),listMonstreManager);
-                wave = 5;
-
-                break;
 
             case LOOSE:
                 for (Player p : players) {
                     p.sendTitle("GAME OVER", "", 5, 100, 5);
                 }
+                    gameStarted = false;
                     listMonstreManager.clear();
                     countdown = 5;
                     CountDownLoose countDownLoose = new CountDownLoose();
                     countDownLoose.runTaskTimer(plugin, 0L, 20L);
-                    gameStarted = false;
+
 
                 break;
 

@@ -2,6 +2,7 @@ package me.timecutstr.mcsiege.commands;
 
 import me.timecutstr.mcsiege.McSiege;
 import me.timecutstr.mcsiege.manager.GameState;
+import me.timecutstr.mcsiege.staticMethode.WorldCheck;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,6 +13,11 @@ public class StartCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         McSiege plugin = McSiege.getPlugin();
+
+        //VERIF QUE CET EVENEMENT NE S'APPLIQUE QU'A MINESIEGE
+        if(sender instanceof Player p && !WorldCheck.worldCheck(p.getWorld())) {
+            return false;
+        }
 
         if(sender instanceof Player p) {
             if (!(p.hasPermission("MineSiege.start"))) {
