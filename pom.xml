@@ -50,7 +50,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.4</version>
                 <configuration>
-                    <outputDirectory>C:\Users\Dimitri\Desktop\serv test minecraft 1.19.2\plugins</outputDirectory>
+                    <outputDirectory>C:\Users\Dimitri_Portable\Desktop\serv test minecraft 1.19.2-20221219T185907Z-001\serv test minecraft 1.19.2\plugins</outputDirectory>
                 </configuration>
             </plugin>
         </plugins>

@@ -14,6 +14,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HealthManager {
+    public int getViesMax() {
+        return viesMax;
+    }
+
+    public int getVies() {
+        return vies;
+    }
+
     private int viesMax;
     private int vies;
 
@@ -72,6 +80,7 @@ public class HealthManager {
                 if (distance < 5) { //SI LA DISTANCE EST INFERIEUR A 5 BLICK ON TUE LE MONSTRE ET ON ENLEVE UN PV
                     monstresMort.add(monstre);
                     vies--;
+                    McSiege.getPlugin().getGameManager().healthBar.updateBossBar();
 
                     Bukkit.broadcastMessage(ChatColor.RED + "Vies restantes : " + vies);
                     target.setCustomName("**"+vies+"**");

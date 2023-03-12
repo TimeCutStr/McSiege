@@ -25,6 +25,7 @@ public final class McSiege extends JavaPlugin {
         saveDefaultConfig();
 
 
+
         //singleton du gamemanager
         this.gameManager = new GameManager(this);
 

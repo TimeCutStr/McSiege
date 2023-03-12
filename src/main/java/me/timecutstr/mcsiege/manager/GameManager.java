@@ -1,8 +1,11 @@
 package me.timecutstr.mcsiege.manager;
 
+import me.timecutstr.mcsiege.HUD.HealthBar;
 import me.timecutstr.mcsiege.McSiege;
 import me.timecutstr.mcsiege.manager.BukkitRunnable.CountDownLoose;
 import me.timecutstr.mcsiege.manager.BukkitRunnable.CountDownNextPhase;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.audience.ForwardingAudience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -23,8 +26,8 @@ import java.util.Map;
 public class GameManager {
 
     private McSiege plugin;
-    private int vies =100;
-    private HealthManager healthManager;
+
+    public HealthManager healthManager;
 
     public int getOpenWaves() {
         return openWaves;
@@ -56,28 +59,8 @@ public class GameManager {
         return players;
     }
 
-    public void addPlayers(Player player) {
+    public HealthBar healthBar;
 
-        if(players.contains(player))
-        {
-            players.remove(player);
-            Bukkit.broadcast(Component.text(player.getName() + " n'est plus prêt !"));
-            return;
-        }
-
-        int joeurMax = McSiege.getPlugin().getConfig().getInt("JoueurMax");
-
-        this.players.add(player);
-        Bukkit.broadcast(Component.text(player.getName()+" est prêt !"));
-
-
-        if(this.players.size() == McSiege.getPlugin().getConfig().getInt("JoueurMax")) {
-            setGameState(GameState.STARTING);
-            return;
-        }
-
-        Bukkit.broadcast(Component.text("Pour commencer il manque " + (joeurMax-this.players.size()) + " joueurs." ));
-    }
 
     private List<Player> players;
 
@@ -114,7 +97,6 @@ public class GameManager {
 
 
 
-    public Map<String, Integer> prix = new HashMap<>();
     public GameManager(McSiege plugin)
     {
         this.plugin = plugin;
@@ -130,7 +112,6 @@ public class GameManager {
             System.out.println("Attention ! La ligne openWaves dans le config.yml est à 0 ou n'est pas configurée !");
             Bukkit.broadcast(Component.text("Attention ! La ligne openWaves dans le config.yml est à 0 ou n'est pas configurée !"));
         }
-
     }
 
 
@@ -139,6 +120,28 @@ public class GameManager {
     // METHODE
 
     //LIST METHODE
+    public void addPlayers(Player player) {
+
+        if(players.contains(player))
+        {
+            players.remove(player);
+            Bukkit.broadcast(Component.text(player.getName() + " n'est plus prêt !"));
+            return;
+        }
+
+        int joeurMax = McSiege.getPlugin().getConfig().getInt("JoueurMax");
+
+        this.players.add(player);
+        Bukkit.broadcast(Component.text(player.getName()+" est prêt !"));
+
+
+        if(this.players.size() == McSiege.getPlugin().getConfig().getInt("JoueurMax")) {
+            setGameState(GameState.STARTING);
+            return;
+        }
+
+        Bukkit.broadcast(Component.text("Pour commencer il manque " + (joeurMax-this.players.size()) + " joueurs." ));
+    }
 
     public void clear()
     {
@@ -355,7 +358,12 @@ public class GameManager {
                     p.setFoodLevel(20);
                 }
 
-                countdown = 40;
+                //On fait apparaitre la bossbar
+                healthBar = new HealthBar();
+                healthBar.showMyBossBar(Audience.audience(players));
+
+
+                countdown = 5;
                 countDownNextPhase = new CountDownNextPhase();
                 countDownNextPhase.runTaskTimer(plugin, 0L, 20L);
                 gameStarted = true;
@@ -460,6 +468,7 @@ public class GameManager {
                     countDownNextPhase = new CountDownNextPhase();
                     countDownNextPhase.runTaskTimer(plugin, 0L, 20L);
                     gameStarted = false;
+                    healthBar.hideActiveBossBar(Audience.audience(players));
             break;
 
 
@@ -473,6 +482,7 @@ public class GameManager {
                     countdown = 5;
                     CountDownLoose countDownLoose = new CountDownLoose();
                     countDownLoose.runTaskTimer(plugin, 0L, 20L);
+                    healthBar.hideActiveBossBar(Audience.audience(players));
 
 
                 break;
